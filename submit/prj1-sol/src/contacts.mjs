@@ -107,12 +107,27 @@ class UserContacts {
         return errResult("BAD_REQ");
       }
 
-      contacts = contacts.filter( item => item.name.startsWith(nameWordPrefix) === true);
+      contacts = contacts.filter( item => {
+        let name = item.name.replace(/[^A-Za-z\s]/g, '').toLowerCase();
+        let words = name.split(' ');
+        let matched = false;
+        words.forEach((word) => {
+          if(word.length > 1){
+            let res = word.startsWith(nameWordPrefix.toLowerCase());
+            if(res === true){
+              matched = true;
+              return false;
+            }
+          }
+        });
+        
+        return matched
+      });
     }
 
     
     if(email !== undefined){
-      contacts = contacts.filter( item => item.emails.indexOf(email) > -1);
+      contacts = contacts.filter( item => item.emails !== undefined && item.emails.indexOf(email) > -1);
     }
 
     if(contacts.length > count){
@@ -137,19 +152,21 @@ class UserContacts {
   
   #generateId() {
     this.#counter++;
-    return this.#counter.toString();
+    let rand = Math.floor(Math.random() * 99);
+    if (rand < 10) rand = "0" + rand.toString();
+    return this.#counter.toString() + "_" + rand.toString();
   }
 
   #validate(contact) {
     let isValid = true;
     let reason = "";
 
-    if (contact.emails instanceof Array === false) {
+    if (contact.emails !== undefined && contact.emails instanceof Array === false) {
       isValid = false;
       reason = "BAD_REQ";
     }
 
-    if (isValid === true) {
+    if (isValid === true && contact.emails !== undefined) {
       contact.emails.forEach((email) => {
         var re = /^.+?\@.+?\..+$/;
         let res = re.test(email);
