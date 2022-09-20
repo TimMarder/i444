@@ -9,8 +9,7 @@
   "scripts": {
     "test": "mocha test/",
     "debug-test": "mocha --inspect-brk test/",
-    "syntax-check":
-      "shopt -s globstar; for f in **/*.mjs; do node -c $f; done;"
+    "syntax-check": "shopt -s globstar; for f in **/*.mjs; do node -c $f; done;"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +17,9 @@
   "devDependencies": {
     "chai": "^4.3.6",
     "mocha": "^10.0.0"
+  },
+  "dependencies": {
+    "cs544-js-utils": "https://sunybing:sunybing@zdu.binghamton.edu/cs544/lib/js-utils/cs544-js-utils-1.0.0.tgz",
+    "cs544-node-utils": "https://sunybing:sunybing@zdu.binghamton.edu/cs544/lib/node-utils/cs544-node-utils-1.0.0.tgz"
   }
 }
