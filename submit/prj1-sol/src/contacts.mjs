@@ -49,7 +49,9 @@ class UserContacts {
       this.#contacts.set(id, contact);
       return okResult(id);
     } else {
-      return errResult(validation.reason);
+      return errResult(validation.reason, {
+        code: validation.reason
+      });
     }
   }
 
@@ -61,14 +63,18 @@ class UserContacts {
    *    NOT_FOUND: no contact for contactId
    */
   read(contactId) {
-    if(typeof contactId !== "string"){
-      return errResult("BAD_REQ");
+    if(typeof contactId !== "string" || contactId === undefined){
+      return errResult("Incorrect Id", {
+        code: 'BAD_REQ'
+      });
     }
 
     const contact = this.#contacts.get(contactId);
 
     if(contact === undefined){
-      return errResult("NOT_FOUND");
+      return errResult("No record found.", {
+        code: 'NOT_FOUND'
+      });
     }
 
     return okResult(contact);
@@ -95,6 +101,7 @@ class UserContacts {
     this.#contacts.forEach((value, key, map) => {
       contacts.push(value)
     });
+    contacts = contacts.slice(startIndex, startIndex + count);
 
     if(id !== undefined){
       contacts = contacts.filter( item => item.id === id);
@@ -124,16 +131,13 @@ class UserContacts {
         return matched
       });
     }
-
     
     if(email !== undefined){
-      contacts = contacts.filter( item => item.emails !== undefined && item.emails.indexOf(email) > -1);
+      contacts = contacts.filter( item => {
+        if(item.emails === undefined ) return false;
+        return item.emails.findIndex(e => e.toLowerCase() === email.toLowerCase()) > -1
+      });
     }
-
-    if(contacts.length > count){
-      contacts = contacts.slice(startIndex, count)
-    }
-
 
     return okResult(contacts);
   }
@@ -160,6 +164,11 @@ class UserContacts {
   #validate(contact) {
     let isValid = true;
     let reason = "";
+
+    if(contact.id !== undefined){
+      isValid = false;
+      reason = "BAD_REQ";
+    }
 
     if (contact.emails !== undefined && contact.emails instanceof Array === false) {
       isValid = false;

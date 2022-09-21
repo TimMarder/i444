@@ -18,6 +18,7 @@ describe('Contacts', () => {
     userContacts = userContactsResult.val;
     ids = [];
     for (const contact of CONTACTS) {
+      delete contact.id; // added this here
       const idResult = userContacts.create(contact);
       expect(idResult.errors).to.be.undefined;
       ids.push(idResult.val);
@@ -62,7 +63,7 @@ describe('Contacts', () => {
     const contactsResult = userContacts.search();
     expect(contactsResult.errors).to.be.undefined;
     const contacts = contactsResult.val
-	  .map(c => { const c1 = { ... c}; delete c1.id; return c1; });
+	  //.map(c => { const c1 = { ... c}; delete c1.id; return c1; });
     expect(contacts).to.deep.equal(CONTACTS);
   });
 
@@ -71,7 +72,7 @@ describe('Contacts', () => {
     const contactsResult = userContacts.search({}, index);
     expect(contactsResult.errors).to.be.undefined;
     const contacts = contactsResult.val
-	  .map(c => { const c1 = { ... c}; delete c1.id; return c1; });
+	  //.map(c => { const c1 = { ... c}; delete c1.id; return c1; });
     expect(contacts).to.deep.equal(CONTACTS.slice(index));
   });
 
@@ -81,7 +82,7 @@ describe('Contacts', () => {
     const contactsResult = userContacts.search({}, index, count);
     expect(contactsResult.errors).to.be.undefined;
     const contacts = contactsResult.val
-	  .map(c => { const c1 = { ... c}; delete c1.id; return c1; });
+	  //.map(c => { const c1 = { ... c}; delete c1.id; return c1; });
     expect(contacts).to.deep.equal(CONTACTS.slice(index, index + count));
   });
 
@@ -90,7 +91,7 @@ describe('Contacts', () => {
     const contactsResult = userContacts.search({nameWordPrefix});
     expect(contactsResult.errors).to.be.undefined;
     const contacts = contactsResult.val
-	  .map(c => { const c1 = { ... c}; delete c1.id; return c1; });
+	  //.map(c => { const c1 = { ... c}; delete c1.id; return c1; });
     expect(contacts).to.deep.equal(CONTACTS.slice(1, 2));
   });
 
@@ -99,7 +100,7 @@ describe('Contacts', () => {
     const contactsResult = userContacts.search({nameWordPrefix});
     expect(contactsResult.errors).to.be.undefined;
     const contacts = contactsResult.val
-	  .map(c => { const c1 = { ... c}; delete c1.id; return c1; });
+	  //.map(c => { const c1 = { ... c}; delete c1.id; return c1; });
     expect(contacts).to.deep.equal(CONTACTS.slice(1, 2));
   });
   
@@ -108,7 +109,7 @@ describe('Contacts', () => {
     const contactsResult = userContacts.search({nameWordPrefix});
     expect(contactsResult.errors).to.be.undefined;
     const contacts = contactsResult.val
-	  .map(c => { const c1 = { ... c}; delete c1.id; return c1; });
+	  //.map(c => { const c1 = { ... c}; delete c1.id; return c1; });
     const cmp = (c1, c2) => c1.name < c2.name ? -1 : c1.name > c2.name ? 1 : 0;
     expect(contacts.sort(cmp))
       .to.deep.equal([CONTACTS[0], CONTACTS[2]].sort(cmp));
@@ -119,7 +120,7 @@ describe('Contacts', () => {
     const contactsResult = userContacts.search({email});
     expect(contactsResult.errors).to.be.undefined;
     const contacts = contactsResult.val
-	  .map(c => { const c1 = { ... c}; delete c1.id; return c1; });
+	  //.map(c => { const c1 = { ... c}; delete c1.id; return c1; });
     expect(contacts).to.deep.equal(CONTACTS.slice(1, 2));
   });
     
@@ -128,7 +129,7 @@ describe('Contacts', () => {
     const contactsResult = userContacts.search({id});
     expect(contactsResult.errors).to.be.undefined;
     const contacts = contactsResult.val
-	  .map(c => { const c1 = { ... c}; delete c1.id; return c1; });
+	  //.map(c => { const c1 = { ... c}; delete c1.id; return c1; });
     expect(contacts).to.deep.equal(CONTACTS.slice(3, 4));
   });
     
@@ -138,7 +139,7 @@ describe('Contacts', () => {
     const contactsResult = userContacts.search({email, nameWordPrefix});
     expect(contactsResult.errors).to.be.undefined;
     const contacts = contactsResult.val
-	  .map(c => { const c1 = { ... c}; delete c1.id; return c1; });
+	  //.map(c => { const c1 = { ... c}; delete c1.id; return c1; });
     expect(contacts).to.deep.equal(CONTACTS.slice(1, 2));
   });
   
