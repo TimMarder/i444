@@ -14,6 +14,9 @@ export default async function makeContactsDao(dbUrl) {
 }
 
 const DEFAULT_COUNT = 5;
+const COLLECTION_NAME = 'contacts';
+const NEXT_ID_KEY = 'nextId';
+const RAND_LEN = 5;
 
 /** holds the contacts for multiple users. All request methods
  *  should assume that their single parameter has been validated
@@ -23,7 +26,7 @@ const DEFAULT_COUNT = 5;
  */
 class ContactsDao {
   constructor(params) {
-    //TODO
+    this.client = params.client;
   }
 
   /** Factory method to create a new instance of this 
@@ -31,9 +34,10 @@ class ContactsDao {
    *    DB: a database error was encountered.
    */
   static async make(dbUrl) {
-    //TODO any setup code
     try {
-      return errResult('TODO', { code: 'TODO' });
+      const client = new MongoClient(dbUrl);
+      this.setupCollection(client);
+      return okResult(new ContactsDao({ client }));
     }
     catch (error) {
       console.error(error);
@@ -41,6 +45,16 @@ class ContactsDao {
     }
   }
 
+  static async setupCollection(client) {
+    const db = client.db();
+    const collections = await (db.listCollections().toArray());
+    const exists = !!collections.find(c => c.name === COLLECTION_NAME);
+    if (!exists) {
+      const options = {collation: {locale: 'en', strength: 2, }};
+      const collection = await db.createCollection(COLLECTION_NAME, options);
+      collection.createIndex({name: 1});
+    }
+  }
 
   /** close off this DAO; implementing object is invalid after 
    *  call to close() 
@@ -49,9 +63,8 @@ class ContactsDao {
    *    DB: a database error was encountered.
    */
   async close() { 
-    //TODO any setup code
     try {
-      return errResult('TODO', { code: 'TODO' });
+      await this.client.close();
     }
     catch (e) {
       console.error(e);
@@ -66,9 +79,9 @@ class ContactsDao {
    *    DB: a database error occurred
    */
   async clearAll() {
-    //TODO any setup code
     try {
-      return errResult('TODO', { code: 'TODO' });
+      const delRes = await this.#collection.deleteMany({})
+      return okResult(delRes.deletedCount);
     }
     catch (error) {
       console.error(error);
@@ -81,9 +94,9 @@ class ContactsDao {
    *    DB: a database error occurred
    */
   async clear({userId}) {
-    //TODO any setup code
     try {
-      return errResult('TODO', { code: 'TODO' });
+      const delRes = await this.#collection.deleteMany({ userId })
+      return okResult(delRes.deletedCount);
     }
     catch (error) {
       console.error(error);
@@ -103,9 +116,14 @@ class ContactsDao {
    *    DB: a database error occurred   
    */
   async create(contact) {
-    //TODO any setup code
     try {
-      return errResult('TODO', { code: 'TODO' });
+      if ("_id" in contact) {
+        return errResult('contact contains an _id property', { code: 'BAD_REQ' });
+      }
+
+      const contactId = await this.#nextId();
+      await this.#collection.insertOne({ id: contactId, ...contact, _prefix: namePrefixes(contact.name) });
+      return okResult(contactId);
     }
     catch (error) {
       console.error(error);
@@ -120,9 +138,15 @@ class ContactsDao {
    *    NOT_FOUND: no contact for contactId id
    */
   async read({userId, id}) {
-    //TODO any setup code
     try {
-      return errResult('TODO', { code: 'TODO' });
+      const result = await this.#collection.findOne({ userId, id });
+      if (!result) {
+        return errResult(`no contact for contactId ${id}`, { code: 'NOT_FOUND' })
+      }
+
+      delete result._id;
+      delete result._prefix;
+      return okResult(result);
     }
     catch (error) {
       console.error(error);
@@ -146,18 +170,42 @@ class ContactsDao {
    *    DB: a database error occurred   
    */
   async search({userId, id, prefix, email, index=0, count=DEFAULT_COUNT}={}) {
-    //TODO any setup code
     try {
-      return errResult('TODO', { code: 'TODO' });
+      const query = { userId };
+      if (id) {
+        query.id = id;
+      }
+      if (email) {
+        query.emails = email;
+      }
+      if (prefix) {
+        query._prefix = prefix;
+      }
+      const cursor = this.#collection.find(query);
+      const result = await cursor.sort({ name: 1 }).skip(index).limit(count).toArray();
+      return okResult(result.map(item => {
+        delete item._id;
+        delete item._prefix;
+        return item;
+      }));
     }
     catch (error) {
       console.error(error);
       return errResult(error.message, { code: 'DB' });
     }
   }
-  
  
-  
-}
+  // Returns a unique, difficult to guess id.
+  async #nextId() {
+    const query = { _id: NEXT_ID_KEY };
+    const update = { $inc: { [NEXT_ID_KEY]: 1 } };
+    const options = { upsert: true, returnDocument: 'after' };
+    const ret = await this.client.db().collection('id_gen').findOneAndUpdate(query, update, options);
+    const seq = ret.value[NEXT_ID_KEY];
+    return String(seq) + Math.random().toFixed(RAND_LEN).replace(/^0\./, '_');
+  }
 
-//TODO: add auxiliary functions and definitions as needed
+  get #collection() {
+    return this.client.db().collection(COLLECTION_NAME);
+  }
+}
