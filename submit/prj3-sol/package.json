@@ -1,0 +1,34 @@
+{
+  "name": "prj3-sol",
+  "version": "1.0.0",
+  "description": "Name:\t\tTim Marder B-Number:\tB00789845 Email:\t\ttmarder1@binghamton.edu",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/",
+    "debug-test": "mocha --inspect-brk test/",
+    "syntax-check":
+      "shopt -s globstar; for f in **/*.mjs; do node -c $f; done;"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "contacts-dao": "https://sunybing:sunybing@zdu.binghamton.edu/cs544/lib/contacts-dao/contacts-dao-1.0.0.tgz",
+    "cors": "^2.8.5",
+    "cs544-js-utils": "https://sunybing:sunybing@zdu.binghamton.edu/cs544/lib/js-utils/cs544-js-utils-1.1.0.tgz",
+    "cs544-node-utils": "https://sunybing:sunybing@zdu.binghamton.edu/cs544/lib/node-utils/cs544-node-utils-1.0.0.tgz",
+    "express": "^4.18.2",
+    "http-status": "^1.5.3"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "mongodb-memory-server": "^8.9.3",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.1"
+  }
+}
