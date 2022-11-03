@@ -2,5 +2,4 @@ Name:		Tim Marder
 B-Number:	B00789845
 Email:		tmarder1@binghamton.edu
 
-Add text here as needed.
-
+Everything works except sometimes there is a case sensitive issue that fails one test.
