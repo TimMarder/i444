@@ -1,0 +1,16 @@
+#errors { color: red; }
+dl {
+  display: grid;
+  grid-template-columns: max-content auto;
+}
+dt {
+  grid-column-start: 1;
+  font-weight: bold;
+}
+dd {
+  grid-column-start: 2;
+}
+ul.emails li, ul.phones li {
+  list-style: none;
+  margin: 2px;
+}
