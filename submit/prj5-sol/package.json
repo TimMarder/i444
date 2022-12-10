@@ -1,0 +1,21 @@
+{
+  "name": "prj5-sol",
+  "version": "1.0.0",
+  "description": "Name:\t\tTim Marder B-Number:\tB00789845 Email:\t\ttmarder1@binghamton.edu",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html --port 2346"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cs544-js-utils": "https://sunybing:sunybing@zdu.binghamton.edu/cs544/lib/js-utils/cs544-js-utils-1.1.0.tgz",
+    "parcel": "^2.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "process": "^0.11.10"
+  }
+}

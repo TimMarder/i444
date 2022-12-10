@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CS 444/544 Project 5</title>
+    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+  <body>
+    <h1>CS 444/544 Project 5</h1>
+    <div id="app"></div>
+
+    <template id="contact-widget">
+      <link href="contact-widget.css" rel="stylesheet">
+
+      <div class="contact">
+	<dl>
+	  <dt class="name">Name</dt><dd class="name"></dd>
+          <dt class="addr">Address</dt>
+	  <dd class="addr">
+	    <dl class="address">
+	      <dt class="addrLine1">Address Line 1</dt>
+	      <dd class="addrLine1"></dd>
+	      <dt class="addrLine2">Address Line 2</dt>
+	      <dd class="addrLine2"></dd>
+	      <dt class="city">City</dt><dd class="city"></dd>
+	      <dt class="state">State</dt><dd class="state"></dd>
+	      <dt class="zip">Zip Code</dt><dd class="zip"></dd>
+	    </dl>
+	  </dd>
+	  <dt class="phones">Phone Numbers</dt>
+	  <dd class="phones">
+	    <ul class="phones">
+	      <!-- clone following for multiple phones -->
+	      <li>
+		<span class="phone-type"></span>
+		<span class="phone-number"></span>
+	      </li>
+	    </ul>
+	  </dd>
+	  <dt class="emails">Emails</dt>
+          <dd class="emails">
+            <ul class="emails">
+	      <!-- clone following for each email address -->
+	      <li class="email"></li>
+	    </ul>
+          </dd>
+	</dl>
+      </div>
+    </template>
+    
+    <script src="./js/index.mjs" type="module"></script>
+  </body>
+</html>
